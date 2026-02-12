@@ -1,16 +1,50 @@
 /**
- * Mobile Menu Fix v3 – Bulletproof hamburger menu for all pages
- * Uses direct inline style manipulation to bypass any CSS specificity issues
+ * Mobile Menu Fix v4 – Bulletproof hamburger menu
+ * Fixes: hamburger position in top-right of black header bar
  */
 (function () {
     'use strict';
 
-    /* ── 0. Inject critical CSS overrides with maximum specificity ── */
     var style = document.createElement('style');
     style.id = 'mobile-menu-fix-styles';
     style.textContent = [
         '@media only screen and (max-width: 767px) {',
-        /* Force hamburger visible - ultra specific selectors */
+
+        /* ── HEADER BAR LAYOUT: logo left, hamburger right ── */
+        '  .elementor-element-3550465 > .e-con-inner {',
+        '    display: flex !important;',
+        '    flex-direction: row !important;',
+        '    flex-wrap: nowrap !important;',
+        '    align-items: center !important;',
+        '    justify-content: space-between !important;',
+        '    width: 100% !important;',
+        '    position: relative !important;',
+        '  }',
+
+        /* Logo widget: stay left, shrink on small screens */
+        '  .elementor-element-3550465 .elementor-widget-site-logo {',
+        '    flex: 0 1 auto !important;',
+        '    max-width: 60% !important;',
+        '  }',
+
+        /* Nav widget: push to right, don\'t wrap */
+        '  .elementor-element-3550465 .elementor-widget-navigation-menu {',
+        '    flex: 1 1 auto !important;',
+        '    display: flex !important;',
+        '    justify-content: flex-end !important;',
+        '    align-items: center !important;',
+        '    min-width: 0 !important;',
+        '  }',
+
+        /* The hfe-nav-menu wrapper: flex-end for hamburger */
+        '  .elementor-element-3550465 .hfe-nav-menu.hfe-layout-horizontal {',
+        '    display: flex !important;',
+        '    justify-content: flex-end !important;',
+        '    align-items: center !important;',
+        '    width: 100% !important;',
+        '  }',
+
+        /* ── HAMBURGER TOGGLE: visible, right-aligned ── */
         '  .hfe-layout-horizontal .hfe-nav-menu__toggle,',
         '  .hfe-layout-vertical .hfe-nav-menu__toggle,',
         '  .hfe-nav-menu .hfe-nav-menu__toggle,',
@@ -21,7 +55,6 @@
         '    display: flex !important;',
         '    cursor: pointer;',
         '    padding: 8px;',
-        '    margin-left: auto;',
         '    z-index: 10000;',
         '    align-items: center;',
         '    position: relative;',
@@ -36,7 +69,8 @@
         '    fill: #ffffff !important;',
         '    display: block !important;',
         '  }',
-        /* Hide horizontal nav by default on mobile */
+
+        /* ── NAV MENU: hidden by default on mobile ── */
         '  nav.hfe-nav-menu__layout-horizontal {',
         '    display: none !important;',
         '    visibility: hidden !important;',
@@ -44,28 +78,31 @@
         '    height: 0 !important;',
         '    overflow: hidden !important;',
         '  }',
-        /* When menu is open */
+
+        /* ── NAV MENU: open state ── */
         '  nav.hfe-nav-menu__layout-horizontal.mobile-menu-open {',
         '    display: block !important;',
         '    visibility: visible !important;',
         '    opacity: 1 !important;',
         '    height: auto !important;',
         '    overflow: visible !important;',
-        '    position: absolute !important;',
-        '    top: 100% !important;',
+        '    position: fixed !important;',
+        '    top: 0 !important;',
         '    left: 0 !important;',
         '    right: 0 !important;',
+        '    bottom: 0 !important;',
         '    width: 100vw !important;',
-        '    background: #0a0a0a !important;',
-        '    z-index: 9999 !important;',
-        '    padding: 10px 0 !important;',
-        '    box-shadow: 0 8px 24px rgba(0,0,0,0.4) !important;',
-        '    animation: mobileMenuSlide 0.25s ease-out;',
+        '    background: rgba(10, 10, 10, 0.97) !important;',
+        '    z-index: 99999 !important;',
+        '    padding: 70px 0 20px !important;',
+        '    overflow-y: auto !important;',
+        '    animation: mobileMenuFade 0.2s ease-out;',
         '  }',
-        '  @keyframes mobileMenuSlide {',
-        '    from { opacity: 0; transform: translateY(-10px); }',
-        '    to   { opacity: 1; transform: translateY(0); }',
+        '  @keyframes mobileMenuFade {',
+        '    from { opacity: 0; }',
+        '    to   { opacity: 1; }',
         '  }',
+
         /* Stack menu items vertically */
         '  nav.mobile-menu-open ul.hfe-nav-menu {',
         '    display: flex !important;',
@@ -81,9 +118,9 @@
         '    border-bottom: none;',
         '  }',
         '  nav.mobile-menu-open li a.hfe-menu-item {',
-        '    padding: 14px 20px !important;',
+        '    padding: 16px 24px !important;',
         '    color: #ffffff !important;',
-        '    font-size: 15px !important;',
+        '    font-size: 16px !important;',
         '    display: flex !important;',
         '    justify-content: space-between !important;',
         '    align-items: center !important;',
@@ -91,6 +128,7 @@
         '  nav.mobile-menu-open li a.hfe-menu-item:hover {',
         '    background: rgba(255,255,255,0.06);',
         '  }',
+
         /* Sub-menu styling */
         '  nav.mobile-menu-open .sub-menu {',
         '    position: static !important;',
@@ -113,15 +151,16 @@
         '    display: block !important;',
         '  }',
         '  nav.mobile-menu-open .sub-menu a.hfe-sub-menu-item {',
-        '    padding: 12px 20px 12px 36px !important;',
+        '    padding: 14px 24px 14px 40px !important;',
         '    color: #b0b0b0 !important;',
-        '    font-size: 14px !important;',
+        '    font-size: 15px !important;',
         '    display: block !important;',
         '  }',
         '  nav.mobile-menu-open .sub-menu a.hfe-sub-menu-item:hover {',
         '    color: #ffffff !important;',
         '    background: rgba(255,255,255,0.04);',
         '  }',
+
         /* Sub-arrow indicator */
         '  nav.mobile-menu-open .hfe-menu-toggle.sub-arrow {',
         '    display: flex !important;',
@@ -136,17 +175,38 @@
         '    content: "▾" !important;',
         '    font-family: inherit !important;',
         '    color: #888 !important;',
-        '    font-size: 14px !important;',
+        '    font-size: 16px !important;',
         '    font-style: normal !important;',
         '  }',
-        /* Header container position for absolute dropdown */
-        '  .e-con.e-parent[data-settings*="sticky"] {',
-        '    position: relative !important;',
+
+        /* Close button inside the fullscreen menu */
+        '  .mobile-menu-close-btn {',
+        '    position: fixed !important;',
+        '    top: 16px !important;',
+        '    right: 16px !important;',
+        '    z-index: 100000 !important;',
+        '    width: 40px !important;',
+        '    height: 40px !important;',
+        '    display: none;',
+        '    align-items: center !important;',
+        '    justify-content: center !important;',
+        '    cursor: pointer;',
+        '    background: rgba(255,255,255,0.1);',
+        '    border: none;',
+        '    border-radius: 8px;',
+        '    padding: 8px;',
         '  }',
-        '  .e-con-inner {',
-        '    position: relative !important;',
+        '  .mobile-menu-close-btn.visible {',
+        '    display: flex !important;',
         '  }',
+        '  .mobile-menu-close-btn svg {',
+        '    width: 20px;',
+        '    height: 20px;',
+        '    fill: #ffffff;',
+        '  }',
+
         '}',
+
         /* Desktop: force normal display */
         '@media only screen and (min-width: 768px) {',
         '  div.hfe-nav-menu__toggle {',
@@ -158,11 +218,14 @@
         '    opacity: 1 !important;',
         '    height: auto !important;',
         '  }',
+        '  .mobile-menu-close-btn {',
+        '    display: none !important;',
+        '  }',
         '}'
     ].join('\n');
     document.head.appendChild(style);
 
-    /* ── 1. Run on DOM ready ── */
+    /* ── Init on DOM ready ── */
     function initMobileMenu() {
 
         var toggles = document.querySelectorAll('.hfe-nav-menu__toggle');
@@ -170,7 +233,7 @@
 
         toggles.forEach(function (toggle) {
 
-            /* Also force visibility via inline style as ultimate override */
+            /* Force inline styles on mobile */
             if (window.innerWidth <= 767) {
                 toggle.style.setProperty('display', 'flex', 'important');
                 toggle.style.setProperty('visibility', 'visible', 'important');
@@ -189,16 +252,14 @@
             var iconContainer = toggle.querySelector('.hfe-nav-menu-icon');
             var openIcon = iconContainer ? iconContainer.querySelector('svg.e-fas-align-justify') : null;
 
-            /* Create close (X) icon if not already present */
-            var closeIcon = iconContainer ? iconContainer.querySelector('.mobile-menu-close-icon') : null;
-            if (!closeIcon && iconContainer) {
-                closeIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-                closeIcon.setAttribute("aria-hidden", "true");
-                closeIcon.setAttribute("class", "e-font-icon-svg mobile-menu-close-icon");
-                closeIcon.setAttribute("viewBox", "0 0 352 512");
-                closeIcon.setAttribute("style", "width:22px;height:22px;fill:#ffffff;display:none;");
-                closeIcon.innerHTML = '<path d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.19 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.19 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path>';
-                iconContainer.appendChild(closeIcon);
+            /* Create a fullscreen close button (outside the menu) */
+            var closeBtn = document.querySelector('.mobile-menu-close-btn');
+            if (!closeBtn) {
+                closeBtn = document.createElement('button');
+                closeBtn.className = 'mobile-menu-close-btn';
+                closeBtn.setAttribute('aria-label', 'Close menu');
+                closeBtn.innerHTML = '<svg viewBox="0 0 352 512" xmlns="http://www.w3.org/2000/svg"><path d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.19 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.19 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path></svg>';
+                document.body.appendChild(closeBtn);
             }
 
             var isOpen = false;
@@ -207,25 +268,27 @@
             toggle.addEventListener('click', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
-
-                isOpen = !isOpen;
-
-                if (isOpen) {
-                    navMenu.classList.add('mobile-menu-open');
-                    toggle.classList.add('hfe-active', 'hfe-active-menu');
-                    if (openIcon) openIcon.style.display = 'none';
-                    if (closeIcon) closeIcon.style.display = 'block';
-                } else {
-                    closeMenu();
-                }
+                if (!isOpen) openMenu();
             });
+
+            closeBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                closeMenu();
+            });
+
+            function openMenu() {
+                isOpen = true;
+                navMenu.classList.add('mobile-menu-open');
+                closeBtn.classList.add('visible');
+                document.body.style.overflow = 'hidden'; // prevent body scroll
+            }
 
             function closeMenu() {
                 isOpen = false;
                 navMenu.classList.remove('mobile-menu-open');
-                toggle.classList.remove('hfe-active', 'hfe-active-menu');
-                if (openIcon) openIcon.style.display = 'block';
-                if (closeIcon) closeIcon.style.display = 'none';
+                closeBtn.classList.remove('visible');
+                document.body.style.overflow = '';
 
                 /* Close all sub-menus */
                 var openSubs = navMenu.querySelectorAll('.sub-menu.mobile-sub-open');
@@ -261,19 +324,11 @@
                 });
             });
 
-            /* ── Close menu on outside click ── */
-            document.addEventListener('click', function (e) {
-                if (isOpen && !wrapper.contains(e.target)) {
-                    closeMenu();
-                }
-            });
-
             /* ── Resize handler ── */
             window.addEventListener('resize', function () {
                 if (window.innerWidth > 767 && isOpen) {
                     closeMenu();
                 }
-                /* Re-apply inline styles on resize */
                 if (window.innerWidth <= 767) {
                     toggle.style.setProperty('display', 'flex', 'important');
                     toggle.style.setProperty('visibility', 'visible', 'important');
@@ -287,7 +342,6 @@
         });
     }
 
-    /* Run immediately if DOM already loaded, otherwise wait */
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initMobileMenu);
     } else {
