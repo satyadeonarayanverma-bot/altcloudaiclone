@@ -100,6 +100,26 @@
         '    fill: #ffffff;',
         '  }',
 
+        /* Branding inside overlay */
+        '  #mobile-nav-brand {',
+        '    padding: 0 24px 12px;',
+        '    border-bottom: 1px solid rgba(255,255,255,0.1);',
+        '    margin-bottom: 8px;',
+        '  }',
+        '  #mobile-nav-brand .brand-main {',
+        '    font-family: Arial, sans-serif;',
+        '    font-size: 22px;',
+        '    font-weight: 800;',
+        '    color: #ffffff;',
+        '  }',
+        '  #mobile-nav-brand .brand-accent {',
+        '    font-family: Arial, sans-serif;',
+        '    font-size: 22px;',
+        '    font-weight: 400;',
+        '    color: #33a1fd;',
+        '    margin-left: 5px;',
+        '  }',
+
         /* Menu list */
         '  #mobile-nav-overlay .mobile-nav-list {',
         '    list-style: none;',
@@ -217,6 +237,12 @@
             '<path d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.19 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.19 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path>' +
             '</svg>';
         overlay.appendChild(closeBtn);
+
+        /* Branding at top of overlay */
+        var brand = document.createElement('div');
+        brand.id = 'mobile-nav-brand';
+        brand.innerHTML = '<span class="brand-main">TechFlow</span><span class="brand-accent">Solutions</span>';
+        overlay.appendChild(brand);
 
         /* Build menu items from existing nav */
         var navList = document.createElement('ul');
