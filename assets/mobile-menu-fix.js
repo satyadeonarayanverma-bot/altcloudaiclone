@@ -65,5 +65,42 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (iconClose) iconClose.style.display = 'none';
             }
         });
+
+        // Sub-menu Toggle Logic
+        const subMenuToggles = wrapper.querySelectorAll('.hfe-menu-toggle');
+        subMenuToggles.forEach(subToggle => {
+            subToggle.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation(); // Prevent triggering the link
+
+                const parentLi = subToggle.closest('li');
+                if (!parentLi) return;
+
+                const subMenu = parentLi.querySelector('.sub-menu');
+                if (!subMenu) return;
+
+                // Toggle visibility
+                if (subMenu.classList.contains('toggled-on')) {
+                    subMenu.classList.remove('toggled-on');
+                    subMenu.style.display = 'none';
+                    subToggle.setAttribute('aria-expanded', 'false');
+                    parentLi.classList.remove('hfe-active-menu-item'); // Optional styling
+
+                    // Rotate arrow back
+                    const icon = subToggle.querySelector('i');
+                    if (icon) icon.style.transform = 'rotate(0deg)';
+
+                } else {
+                    subMenu.classList.add('toggled-on');
+                    subMenu.style.display = 'block';
+                    subToggle.setAttribute('aria-expanded', 'true');
+                    parentLi.classList.add('hfe-active-menu-item'); // Optional styling
+
+                    // Rotate arrow
+                    const icon = subToggle.querySelector('i');
+                    if (icon) icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
     });
 });
